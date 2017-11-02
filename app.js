@@ -292,18 +292,26 @@ function sendToBot(senderID, currentUser, message) {
   aiRequest.on('response', function(response) {
     console.log(response);
     if (response) {
-      var result = response.result;
+      const result = response.result;
       if (result) {
-        var fulfillment = result.fulfillment;
+        const fulfillment = result.fulfillment;
         if (fulfillment && fulfillment.speech && fulfillment.speech.length > 0) {
           sendTypingOff(senderID);
           sendTextMessage(senderID, fulfillment.speech);
         }
         else {
-          var action = result.action;
+          const action = result.action;
+          const parameters = result.parameters;
           console.log('action: ', action);
+          console.log('parameters: ', parameters);
           if (action) {
             switch (action) {
+              case 'account.balance':
+                checkBalance(senderID, parameters.account_type);
+                break;
+              case 'account.movement':
+                getAccountMovement(senderID);
+                break;
               case 'chuck.norris':
                 chuckNorrisFacts(senderID);
                 break;
@@ -334,6 +342,31 @@ function sendToBot(senderID, currentUser, message) {
   });
 
   aiRequest.end();
+}
+
+function checkBalance(senderID, accountType) {
+  if (senderID && accountType) {
+    console.log('check balance for: ', accountType);
+    if (accountType === 'débito' || accountType === 'debito' || accountType === 'debit') {
+
+    }
+    else if (accountType === 'crédito' || accountType === 'credito' || accountType === 'credit') {
+    }
+    else {
+      sendTextMessage(senderID, "Disculpa, no conozco ese tipo de cuenta. Por ahora sólo reconozco cuenta de crédito o de débito.");
+      sendGiphy(senderID, "sorry");
+    }
+  }
+  else {
+    sendTextMessage(senderID, "Perdón pero para chequear el balance necesito el tipo de cuenta.");
+    sendGiphy(senderID, "confused");
+  }
+}
+
+function getAccountMovement(senderId) {
+  if (senderId) {
+
+  }
 }
 
 function chuckNorrisFacts(senderID) {
