@@ -301,6 +301,7 @@ function sendToBot(senderID, currentUser, message) {
         }
         else {
           var action = result.action;
+          console.log('action: ', action);
           if (action) {
             switch (action) {
               case 'chuck.norris':
