@@ -243,7 +243,7 @@ function receivedMessage(event) {
 function handleMessage(currentUser, senderID, message, isEcho, messageId, appId, metadata) {
   //console.log("currentUser: ");
   //console.log(currentUser);
-  var currentName = currentUser ? (currentUser.firstName ? currentUser.firstName : 'human') : 'human ';
+  var currentName = currentUser ? (currentUser.firstName ? currentUser.firstName : 'humano') : 'humano ';
 
   // You may get a text or attachment but not both
   var messageText = message.text;
@@ -372,9 +372,14 @@ function checkBalance(senderID, accountType) {
           if (!error && response.statusCode == 200) {
             const json = JSON.stringify(body, null, 2);
             console.log(json);
-            sendTextMessage(senderID, json);
-            sendGiphy(senderID, "millionaire");
-          } else {
+            const allAccounts = json.data.viewer.allAccounts.edges;
+            if (allAccounts.length > 0) {
+              const account = allAccounts[0];
+              sendTextMessage(senderID, "$" + account.node.balance);
+            }
+            sendGiphy(senderID, "rich");
+          }
+          else {
             console.log(error);
             console.log(response.statusCode);
             sendTextMessage(senderID, "No pude acceder a la información debido a un error, por favor intenta de nuevo.");
@@ -406,9 +411,14 @@ function checkBalance(senderID, accountType) {
         if (!error && response.statusCode == 200) {
           const json = JSON.stringify(body, null, 2);
           console.log(json);
-          sendTextMessage(senderID, json);
+          const allAccounts = json.data.viewer.allAccounts.edges;
+          if (allAccounts.length > 0) {
+            const account = allAccounts[0];
+            sendTextMessage(senderID, "$" + account.node.balance);
+          }
           sendGiphy(senderID, "money benjamins");
-        } else {
+        }
+        else {
           console.log(error);
           console.log(response.statusCode);
           sendTextMessage(senderID, "No pude acceder a la información debido a un error, por favor intenta de nuevo.");
@@ -462,9 +472,13 @@ function getAccountMovement(senderID, movementType, accountType) {
           console.log(json);
           const message = activityType === 'debit' ? 'Estos son los gastos en su cuenta de débito...' : 'Estos son los ingresos en su cuenta de débito...';
           sendTextMessage(senderID, message);
-          sendTextMessage(senderID, json);
+          const allActivities = json.data.viewer.allActivities.edges;
+          for (const activity of allActivities) {
+            sendTextMessage(senderID, activity.description + ": " + activity.amount);
+          }
           sendGiphy(senderID, "broke penniless");
-        } else {
+        }
+        else {
           console.log(error);
           console.log(response.statusCode);
           sendTextMessage(senderID, "No pude acceder a la información debido a un error, por favor intenta de nuevo.");
@@ -502,9 +516,13 @@ function getAccountMovement(senderID, movementType, accountType) {
           console.log(json);
           const message = activityType === 'debit' ? 'Estos son los gastos en su cuenta de crédito...' : 'Estos son los ingresos en su cuenta de crédito...';
           sendTextMessage(senderID, message);
-          sendTextMessage(senderID, json);
+          const allActivities = json.data.viewer.allActivities.edges;
+          for (const activity of allActivities) {
+            sendTextMessage(senderID, activity.description + ": " + activity.amount);
+          }
           sendGiphy(senderID, "broke penniless");
-        } else {
+        }
+        else {
           console.log(error);
           console.log(response.statusCode);
           sendTextMessage(senderID, "No pude acceder a la información debido a un error, por favor intenta de nuevo.");
