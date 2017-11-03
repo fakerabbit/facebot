@@ -347,10 +347,74 @@ function sendToBot(senderID, currentUser, message) {
 function checkBalance(senderID, accountType) {
   if (senderID && accountType) {
     console.log('check balance for: ', accountType);
-    if (accountType === 'débito' || accountType === 'debito' || accountType === 'debit') {
 
+    if (accountType === 'débito' || accountType === 'debito' || accountType === 'debit' || accountType === 'corriente') {
+      if (type) {
+        const data = {
+          "query": "query ($where: AccountWhereArgs) { viewer { allAccounts(where: $where) { edges { node { balance id } } } } }",
+          "variables": {
+            "where": {
+              "accountType": {
+                "like": "%debit%"
+              }
+            }
+          }
+        };
+        request({
+          url: process.env.BANK_URL,
+          method: "POST",
+          json: true,
+          headers: {
+            "content-type": "application/json",
+          },
+          body: data
+        }, function(error, response, body) {
+          if (!error && response.statusCode == 200) {
+            const json = JSON.stringify(body, null, 2);
+            console.log(json);
+            sendTextMessage(senderID, json);
+            sendGiphy(senderID, "millionaire");
+          } else {
+            console.log(error);
+            console.log(response.statusCode);
+            sendTextMessage(senderID, "No pude acceder a la información debido a un error, por favor intenta de nuevo.");
+            sendGiphy(senderID, "my bad");
+          }
+        });
+      }
     }
     else if (accountType === 'crédito' || accountType === 'credito' || accountType === 'credit') {
+      const data = {
+        "query": "query ($where: AccountWhereArgs) { viewer { allAccounts(where: $where) { edges { node { balance id } } } } }",
+        "variables": {
+          "where": {
+            "accountType": {
+              "like": "%credit%"
+            }
+          }
+        }
+      };
+      request({
+        url: process.env.BANK_URL,
+        method: "POST",
+        json: true,
+        headers: {
+          "content-type": "application/json",
+        },
+        body: data
+      }, function(error, response, body) {
+        if (!error && response.statusCode == 200) {
+          const json = JSON.stringify(body, null, 2);
+          console.log(json);
+          sendTextMessage(senderID, json);
+          sendGiphy(senderID, "money benjamins");
+        } else {
+          console.log(error);
+          console.log(response.statusCode);
+          sendTextMessage(senderID, "No pude acceder a la información debido a un error, por favor intenta de nuevo.");
+          sendGiphy(senderID, "my bad");
+        }
+      });
     }
     else {
       sendTextMessage(senderID, "Disculpa, no conozco ese tipo de cuenta. Por ahora sólo reconozco cuenta de crédito o de débito.");
@@ -363,9 +427,98 @@ function checkBalance(senderID, accountType) {
   }
 }
 
-function getAccountMovement(senderId) {
-  if (senderId) {
+function getAccountMovement(senderID, movementType, accountType) {
+  if (senderID && movementType && accountType) {
 
+    const activityType = movementType === 'débito' || movementType === 'debito' ? 'debit' : 'credit';
+
+    if (accountType === 'débito' || accountType === 'debito' || accountType === 'debit' || accountType === 'corriente') {
+      const data = {
+        "query": "query ($where: ActivityWhereArgs) { viewer { allActivities(where: $where) { edges { node { description amount } } } } }",
+        "variables": {
+          "where": {
+            "activityType": {
+              "like": "%" + activityType + "%"
+            },
+            "account": {
+              "accountType": {
+                "like": "%debit%"
+              }
+            }
+          }
+        }
+      };
+      request({
+        url: process.env.BANK_URL,
+        method: "POST",
+        json: true,
+        headers: {
+          "content-type": "application/json",
+        },
+        body: data
+      }, function(error, response, body) {
+        if (!error && response.statusCode == 200) {
+          const json = JSON.stringify(body, null, 2);
+          console.log(json);
+          const message = activityType === 'debit' ? 'Estos son los gastos en su cuenta de débito...' : 'Estos son los ingresos en su cuenta de débito...';
+          sendTextMessage(senderID, message);
+          sendTextMessage(senderID, json);
+          sendGiphy(senderID, "broke penniless");
+        } else {
+          console.log(error);
+          console.log(response.statusCode);
+          sendTextMessage(senderID, "No pude acceder a la información debido a un error, por favor intenta de nuevo.");
+          sendGiphy(senderID, "my bad");
+        }
+      });
+    }
+    else if (accountType === 'crédito' || accountType === 'credito' || accountType === 'credit') {
+      const data = {
+        "query": "query ($where: ActivityWhereArgs) { viewer { allActivities(where: $where) { edges { node { description amount } } } } }",
+        "variables": {
+          "where": {
+            "activityType": {
+              "like": "%" + activityType + "%"
+            },
+            "account": {
+              "accountType": {
+                "like": "%credit%"
+              }
+            }
+          }
+        }
+      };
+      request({
+        url: process.env.BANK_URL,
+        method: "POST",
+        json: true,
+        headers: {
+          "content-type": "application/json",
+        },
+        body: data
+      }, function(error, response, body) {
+        if (!error && response.statusCode == 200) {
+          const json = JSON.stringify(body, null, 2);
+          console.log(json);
+          const message = activityType === 'debit' ? 'Estos son los gastos en su cuenta de crédito...' : 'Estos son los ingresos en su cuenta de crédito...';
+          sendTextMessage(senderID, message);
+          sendTextMessage(senderID, json);
+          sendGiphy(senderID, "broke penniless");
+        } else {
+          console.log(error);
+          console.log(response.statusCode);
+          sendTextMessage(senderID, "No pude acceder a la información debido a un error, por favor intenta de nuevo.");
+          sendGiphy(senderID, "my bad");
+        }
+      });
+    }
+    else {
+      sendTextMessage(senderID, "Disculpa, no conozco ese tipo de cuenta. Por ahora sólo reconozco cuenta de crédito o de débito.");
+      sendGiphy(senderID, "sorry");
+    }
+  } else {
+    sendTextMessage(senderID, "Perdón pero para revisar la actividad necesito el tipo de cuenta.");
+    sendGiphy(senderID, "confused");
   }
 }
 
