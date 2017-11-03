@@ -472,7 +472,7 @@ function getAccountMovement(senderID, movementType, accountType) {
           sendTextMessage(senderID, message);
           const allActivities = body.data.viewer.allActivities.edges;
           for (const activity of allActivities) {
-            sendTextMessage(senderID, activity.description + ": " + activity.amount);
+            sendTextMessage(senderID, activity.node.description + ": " + activity.node.amount);
           }
           sendGiphy(senderID, "broke penniless");
         }
@@ -516,7 +516,7 @@ function getAccountMovement(senderID, movementType, accountType) {
           sendTextMessage(senderID, message);
           const allActivities = body.data.viewer.allActivities.edges;
           for (const activity of allActivities) {
-            sendTextMessage(senderID, activity.description + ": " + activity.amount);
+            sendTextMessage(senderID, activity.node.description + ": " + activity.node.amount);
           }
           sendGiphy(senderID, "broke penniless");
         }
