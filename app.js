@@ -438,7 +438,7 @@ function checkBalance(senderID, accountType) {
 function getAccountMovement(senderID, movementType, accountType) {
   if (senderID && movementType && accountType) {
 
-    const activityType = movementType === 'débito' || movementType === 'debito' ? 'debit' : 'credit';
+    const activityType = movementType === 'débito' || movementType === 'debito' || movementType === 'debit' ? 'debit' : 'credit';
 
     if (accountType === 'débito' || accountType === 'debito' || accountType === 'debit' || accountType === 'corriente') {
       const data = {
