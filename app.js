@@ -468,11 +468,11 @@ function getAccountMovement(senderID, movementType, accountType) {
         if (!error && response.statusCode == 200) {
           const json = JSON.stringify(body, null, 2);
           console.log(json);
-          const message = activityType === 'debit' ? 'Estos son los gastos en su cuenta de débito...' : 'Estos son los ingresos en su cuenta de débito...';
-          sendTextMessage(senderID, message);
+          //const message = activityType === 'debit' ? 'Estos son los gastos en su cuenta de débito...' : 'Estos son los ingresos en su cuenta de débito...';
+          //sendTextMessage(senderID, message);
           const allActivities = body.data.viewer.allActivities.edges;
           for (const activity of allActivities) {
-            sendTextMessage(senderID, activity.node.description + ": " + activity.node.amount);
+            sendTextMessage(senderID, activity.node.description + ": $" + activity.node.amount);
           }
           sendGiphy(senderID, "broke penniless");
         }
@@ -512,11 +512,11 @@ function getAccountMovement(senderID, movementType, accountType) {
         if (!error && response.statusCode == 200) {
           const json = JSON.stringify(body, null, 2);
           console.log(json);
-          const message = activityType === 'debit' ? 'Estos son los gastos en su cuenta de crédito...' : 'Estos son los ingresos en su cuenta de crédito...';
-          sendTextMessage(senderID, message);
+          //const message = activityType === 'debit' ? 'Estos son los gastos en su cuenta de crédito...' : 'Estos son los ingresos en su cuenta de crédito...';
+          //sendTextMessage(senderID, message);
           const allActivities = body.data.viewer.allActivities.edges;
           for (const activity of allActivities) {
-            sendTextMessage(senderID, activity.node.description + ": " + activity.node.amount);
+            sendTextMessage(senderID, activity.node.description + ": $" + activity.node.amount);
           }
           sendGiphy(senderID, "broke penniless");
         }
