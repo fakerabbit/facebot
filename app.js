@@ -349,44 +349,42 @@ function checkBalance(senderID, accountType) {
     console.log('check balance for: ', accountType);
 
     if (accountType === 'débito' || accountType === 'debito' || accountType === 'debit' || accountType === 'corriente') {
-      if (type) {
-        const data = {
-          "query": "query ($where: AccountWhereArgs) { viewer { allAccounts(where: $where) { edges { node { balance id } } } } }",
-          "variables": {
-            "where": {
-              "accountType": {
-                "like": "%debit%"
-              }
+      const data = {
+        "query": "query ($where: AccountWhereArgs) { viewer { allAccounts(where: $where) { edges { node { balance id } } } } }",
+        "variables": {
+          "where": {
+            "accountType": {
+              "like": "%debit%"
             }
           }
-        };
-        request({
-          url: process.env.BANK_URL,
-          method: "POST",
-          json: true,
-          headers: {
-            "content-type": "application/json",
-          },
-          body: data
-        }, function(error, response, body) {
-          if (!error && response.statusCode == 200) {
-            const json = JSON.stringify(body, null, 2);
-            console.log(json);
-            const allAccounts = json.data.viewer.allAccounts.edges;
-            if (allAccounts.length > 0) {
-              const account = allAccounts[0];
-              sendTextMessage(senderID, "$" + account.node.balance);
-            }
-            sendGiphy(senderID, "rich");
+        }
+      };
+      request({
+        url: process.env.BANK_URL,
+        method: "POST",
+        json: true,
+        headers: {
+          "content-type": "application/json",
+        },
+        body: data
+      }, function(error, response, body) {
+        if (!error && response.statusCode == 200) {
+          const json = JSON.stringify(body, null, 2);
+          console.log(json);
+          const allAccounts = json.data.viewer.allAccounts.edges;
+          if (allAccounts.length > 0) {
+            const account = allAccounts[0];
+            sendTextMessage(senderID, "$" + account.node.balance);
           }
-          else {
-            console.log(error);
-            console.log(response.statusCode);
-            sendTextMessage(senderID, "No pude acceder a la información debido a un error, por favor intenta de nuevo.");
-            sendGiphy(senderID, "my bad");
-          }
-        });
-      }
+          sendGiphy(senderID, "rich");
+        }
+        else {
+          console.log(error);
+          console.log(response.statusCode);
+          sendTextMessage(senderID, "No pude acceder a la información debido a un error, por favor intenta de nuevo.");
+          sendGiphy(senderID, "my bad");
+        }
+      });
     }
     else if (accountType === 'crédito' || accountType === 'credito' || accountType === 'credit') {
       const data = {
