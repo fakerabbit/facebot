@@ -310,7 +310,7 @@ function sendToBot(senderID, currentUser, message) {
                 checkBalance(senderID, parameters.account_type);
                 break;
               case 'account.movement':
-                getAccountMovement(senderID);
+                getAccountMovement(senderID, 'debit', parameters.account_type);
                 break;
               case 'chuck.norris':
                 chuckNorrisFacts(senderID);
