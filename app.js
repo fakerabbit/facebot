@@ -371,7 +371,7 @@ function checkBalance(senderID, accountType) {
         if (!error && response.statusCode == 200) {
           const json = JSON.stringify(body, null, 2);
           console.log(json);
-          const allAccounts = json.data.viewer.allAccounts.edges;
+          const allAccounts = body.data.viewer.allAccounts.edges;
           if (allAccounts.length > 0) {
             const account = allAccounts[0];
             sendTextMessage(senderID, "$" + account.node.balance);
@@ -409,7 +409,7 @@ function checkBalance(senderID, accountType) {
         if (!error && response.statusCode == 200) {
           const json = JSON.stringify(body, null, 2);
           console.log(json);
-          const allAccounts = json.data.viewer.allAccounts.edges;
+          const allAccounts = body.data.viewer.allAccounts.edges;
           if (allAccounts.length > 0) {
             const account = allAccounts[0];
             sendTextMessage(senderID, "$" + account.node.balance);
@@ -470,7 +470,7 @@ function getAccountMovement(senderID, movementType, accountType) {
           console.log(json);
           const message = activityType === 'debit' ? 'Estos son los gastos en su cuenta de débito...' : 'Estos son los ingresos en su cuenta de débito...';
           sendTextMessage(senderID, message);
-          const allActivities = json.data.viewer.allActivities.edges;
+          const allActivities = body.data.viewer.allActivities.edges;
           for (const activity of allActivities) {
             sendTextMessage(senderID, activity.description + ": " + activity.amount);
           }
@@ -514,7 +514,7 @@ function getAccountMovement(senderID, movementType, accountType) {
           console.log(json);
           const message = activityType === 'debit' ? 'Estos son los gastos en su cuenta de crédito...' : 'Estos son los ingresos en su cuenta de crédito...';
           sendTextMessage(senderID, message);
-          const allActivities = json.data.viewer.allActivities.edges;
+          const allActivities = body.data.viewer.allActivities.edges;
           for (const activity of allActivities) {
             sendTextMessage(senderID, activity.description + ": " + activity.amount);
           }
