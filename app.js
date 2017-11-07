@@ -395,27 +395,12 @@ function receivedPostback(event) {
               type: "postback",
               title: "Sample Title",
               payload: "SAMPLE_PAYLOAD"
-            },]
-          }
-        }
-      }
-    };
-    callSendAPI(messageData);
-    messageData = {
-      recipient: {
-        id: senderID
-      },
-      message: {
-        attachment: {
-          type: "template",
-          payload: {
-            template_type: "button",
-            text: "Main Menu",
-            buttons:[{
+            },
+            {
               type: "web_url",
               url: "https://devsu.com",
               title: "DEVSU"
-            }]
+            },]
           }
         }
       }
@@ -434,36 +419,6 @@ function receivedPostback(event) {
   // When a postback is called, we'll send a message back to the sender to
   // let them know it was successful
   //sendTextMessage(senderID, "Postback called");
-}
-
-function randomCorrectAnswer(senderID) {
-  var i = 0;
-  var feedback = [
-    "Correct! Look at you!",
-    "That's right! Good job!",
-    "Yep. You got that one right.",
-    "That is correct. I can tell you got that one off the internet.",
-    "Yup! Yipikaye human!",
-    "Correct. You are officially a nerd. Like me. But I'm a bot. That came out weird...."
-  ];
-  var min = 0;
-  var max = feedback.length;
-  i = Math.floor((Math.random() * max) + min);
-  sendTextMessage(senderID, feedback[i]);
-}
-
-/**
- * Randomize array element order in-place.
- * Using Durstenfeld shuffle algorithm.
- */
-function shuffleArray(array) {
-  for (var i = array.length - 1; i > 0; i--) {
-    var j = Math.floor(Math.random() * (i + 1));
-    var temp = array[i];
-    array[i] = array[j];
-    array[j] = temp;
-  }
-  return array;
 }
 
 /*
@@ -717,55 +672,6 @@ function sendGenericMessage(recipientId) {
   };
 
   callSendAPI(messageData);
-}
-
-function sendGiphy(recipientId, text) {
-  if (recipientId && text) {
-    const value = encodeURI(text);
-    request('https://api.giphy.com/v1/gifs/search?api_key=dc6zaTOxFJmzC&limit=50&rating=pg&q=' + value, function (error, response, body) {
-      if (!error && response.statusCode == 200) {
-        var parsed = JSON.parse(body);
-        if (parsed && parsed.data && parsed.data.length > 0) {
-          var i = Math.floor(Math.random() * 10);
-          var meme = parsed.data[i];
-          if (meme && meme.images && meme.images.fixed_width) {
-            var giphy = meme.images.fixed_width;
-            request({
-              uri: 'https://graph.facebook.com/v2.6/me/messages',
-              qs: { access_token: PAGE_ACCESS_TOKEN },
-              method: 'POST',
-              json: {
-                recipient: {
-                  id: recipientId
-                },
-                message: {
-                  attachment: {
-                    type: 'image',
-                    payload: {
-                      url: giphy.url
-                    }
-                  }
-                }
-              }
-
-            }, function (error, response, body) {
-              if (!error && response.statusCode == 200) {
-                var result = body.result;
-
-                if (result) {
-                  console.log(result);
-                } else {
-                  console.log(result);
-                }
-              } else {
-                console.error("Failed sending giphy", response.statusCode, response.statusMessage, body.error);
-              }
-            });
-          }
-        }
-      }
-    });
-  }
 }
 
 /*
