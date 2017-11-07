@@ -234,8 +234,8 @@ function receivedMessage(event) {
 }
 
 function handleMessage(currentUser, senderID, message, isEcho, messageId, appId, metadata) {
-  //console.log("currentUser: ");
-  //console.log(currentUser);
+  console.log("currentUser: ");
+  console.log(currentUser);
   var currentName = currentUser ? (currentUser.firstName ? currentUser.firstName : 'humano') : 'humano ';
 
   // You may get a text or attachment but not both
