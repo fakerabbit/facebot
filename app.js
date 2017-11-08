@@ -207,7 +207,7 @@ function receivedAuthentication(event) {
 }
 
 function getUsername(senderId) {
-  if (senderId && currentUser == null) {
+  if (senderId && currentUser === null) {
     console.log('senderId', senderId);
 
     request({
