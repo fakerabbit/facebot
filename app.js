@@ -237,6 +237,8 @@ function getUsername(senderId) {
           questions: null,
           score: 0
         };
+
+        sendTextMessage(senderID, "Hola " + firstName + "!");
       }
       else {
         console.error("Failed calling GET userId API", response.statusCode, response.statusMessage, body.error);
@@ -274,7 +276,7 @@ function receivedMessage(event) {
   var messageId = message.mid;
   var appId = message.app_id;
   var metadata = message.metadata;
-  //var currentUser = null;
+
   handleMessage(currentUser, senderID, message, isEcho, messageId, appId, metadata);
 }
 
@@ -308,7 +310,7 @@ function handleMessage(currentUser, senderID, message, isEcho, messageId, appId,
       messageText.toLowerCase() == 'hey' ||
       messageText.toLowerCase() == 'hi') {
 
-      sendTextMessage(senderID, "Hola " + currentName + "!");
+      getUsername(senderID);
     }
     else {
       sendTextMessage(senderID, messageText);
