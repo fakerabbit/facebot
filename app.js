@@ -246,6 +246,9 @@ function getUsername(senderId) {
       }
     });
   }
+  else if (currentUser) {
+    sendTextMessage(senderId, "Hola " + currentUser.firstName + "!");
+  }
 }
 
 /*
