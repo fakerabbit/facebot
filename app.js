@@ -94,6 +94,10 @@ app.post('/webhook', function (req, res) {
 
       // Iterate over each messaging event
       pageEntry.messaging.forEach(function(messagingEvent) {
+
+        var senderID = messagingEvent.sender.id;
+        getUsername(senderID);
+
         if (messagingEvent.optin) {
           receivedAuthentication(messagingEvent);
         } else if (messagingEvent.message) {
@@ -197,15 +201,13 @@ function receivedAuthentication(event) {
     "through param '%s' at %d", senderID, recipientID, passThroughParam,
     timeOfAuth);
 
-  getUsername(senderID);
-
   // When an authentication is received, we'll send a message back to the sender
   // to let them know it was successful.
   sendTextMessage(senderID, "Authentication successful");
 }
 
 function getUsername(senderId) {
-  if (senderId) {
+  if (senderId && currentUser == null) {
     console.log('senderId', senderId);
     request({
       uri: 'https://graph.facebook.com/v2.6/' + senderId + '?fields=first_name,last_name,profile_pic&access_token=' + process.env.PAGE_ACCESS_TOKEN,
