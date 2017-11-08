@@ -244,7 +244,6 @@ function getUsername(senderId) {
       }
     });
   }
-  currentUser = null;
 }
 
 /*
