@@ -209,19 +209,42 @@ function receivedAuthentication(event) {
 function getUsername(senderId) {
   if (senderId && currentUser == null) {
     console.log('senderId', senderId);
-    request({
-      uri: 'https://graph.facebook.com/v2.6/' + senderId + '?fields=first_name,last_name,profile_pic&access_token=' + process.env.PAGE_ACCESS_TOKEN,
-      method: 'GET',
 
+    request({
+      uri: 'https://graph.facebook.com/v2.6/' + senderId + '?access_token=' + process.env.MESSENGER_PAGE_ACCESS_TOKEN
     }, function (error, response, body) {
       if (!error && response.statusCode == 200) {
-        console.log('body: ', body);
-      } else {
-        console.error("Failed calling getUsername API", response.statusCode, response.statusMessage, body.error);
+        console.log('GOT USER...');
+        var jsonObject = JSON.parse(body);
+        var firstName = jsonObject.first_name;
+        var lastName = jsonObject.last_name;
+        var profilePic = jsonObject.profile_pic;
+        var locale = jsonObject.locale;
+        var timeZone = jsonObject.timezone;
+        var gender = jsonObject.gender;
+        var paymentEnabled = jsonObject.is_payment_enabled;
+
+        currentUser = {
+          userId: senderId,
+          firstName: firstName,
+          lastName: lastName,
+          profilePic: profilePic,
+          locale: locale,
+          timezone: timeZone,
+          gender: gender,
+          isPaymentEnabled: paymentEnabled,
+          gameType: null,
+          questions: null,
+          score: 0
+        };
+      }
+      else {
+        console.error("Failed calling GET userId API", response.statusCode, response.statusMessage, body.error);
+        currentUser = null;
       }
     });
   }
-  return null;
+  currentUser = null;
 }
 
 /*
