@@ -11,6 +11,7 @@ const
   uuid = require('uuid');
 
 var app = express();
+var currentUser = null;
 app.set('port', process.env.PORT || 5000);
 app.use(bodyParser.json({ verify: verifyRequestSignature }));
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -196,9 +197,29 @@ function receivedAuthentication(event) {
     "through param '%s' at %d", senderID, recipientID, passThroughParam,
     timeOfAuth);
 
+  getUsername(senderID);
+
   // When an authentication is received, we'll send a message back to the sender
   // to let them know it was successful.
   sendTextMessage(senderID, "Authentication successful");
+}
+
+function getUsername(senderId) {
+  if (senderId) {
+    console.log('senderId', senderId);
+    request({
+      uri: 'https://graph.facebook.com/v2.6/' + senderId + '?fields=first_name,last_name,profile_pic&access_token=' + process.env.PAGE_ACCESS_TOKEN,
+      method: 'GET',
+
+    }, function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+        console.log('body: ', body);
+      } else {
+        console.error("Failed calling getUsername API", response.statusCode, response.statusMessage, body.error);
+      }
+    });
+  }
+  return null;
 }
 
 /*
@@ -229,7 +250,7 @@ function receivedMessage(event) {
   var messageId = message.mid;
   var appId = message.app_id;
   var metadata = message.metadata;
-  var currentUser = null;
+  //var currentUser = null;
   handleMessage(currentUser, senderID, message, isEcho, messageId, appId, metadata);
 }
 
