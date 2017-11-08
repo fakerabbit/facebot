@@ -247,6 +247,7 @@ function getUsername(senderId) {
     });
   }
   else if (currentUser) {
+    console.log('current user not NULL');
     sendTextMessage(senderId, "Hola " + currentUser.firstName + "!");
   }
 }
