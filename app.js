@@ -53,7 +53,11 @@ if (!(APP_SECRET && VALIDATION_TOKEN && PAGE_ACCESS_TOKEN && SERVER_URL)) {
   process.exit(1);
 }
 
-app.get('/privacy', express.static(__dirname + {'index': ['privacy.html']}));
+app.get('/',function(req,res){
+
+  res.sendFile('privacy.html');
+
+});
 
 var bot = apiai(AI_API_TOKEN);
 
