@@ -53,6 +53,8 @@ if (!(APP_SECRET && VALIDATION_TOKEN && PAGE_ACCESS_TOKEN && SERVER_URL)) {
   process.exit(1);
 }
 
+app.get('/privacy', express.static(__dirname + {'index': ['privacy.html']}));
+
 var bot = apiai(AI_API_TOKEN);
 
 /*
@@ -347,10 +349,10 @@ function sendToBot(senderID, currentUser, message) {
           if (action) {
             switch (action) {
               case 'account.balance':
-                sendTextMessage(senderID, 'get account balance!');
+                getAccountBalance(senderID, parameters.account_type);
                 break;
               case 'account.movement':
-                sendTextMessage(senderID, 'get account movement!');
+                getAccountMovement(senderID, parameters.account_type);
                 break;
               default:
                 console.log('unknown action...');
@@ -373,6 +375,18 @@ function sendToBot(senderID, currentUser, message) {
   });
 
   request.end();
+}
+
+function getAccountBalance(senderID, accountType) {
+  if (senderID && accountType) {
+    console.log('get balance for: ', accountType);
+  }
+}
+
+function getAccountMovement(senderID, accountType) {
+  if (senderID && accountType) {
+    console.log('get balance for: ', accountType);
+  }
 }
 
 function showMenu(senderID) {
