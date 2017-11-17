@@ -314,12 +314,16 @@ function handleMessage(currentUser, senderID, message, isEcho, messageId, appId,
       getUsername(senderID);
     }
     else {
-      sendTextMessage(senderID, messageText);
+      sendToBot(senderID, currentUser, messageText);
     }
   }
   else if (messageAttachments) {
     sendTextMessage(senderID, "Message with attachment received");
   }
+}
+
+function sendToBot(senderID, currentUser, message) {
+  sendTypingOn(senderID);
 }
 
 function showMenu(senderID) {
