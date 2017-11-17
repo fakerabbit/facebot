@@ -324,6 +324,24 @@ function handleMessage(currentUser, senderID, message, isEcho, messageId, appId,
 
 function sendToBot(senderID, currentUser, message) {
   sendTypingOn(senderID);
+  const request = bot.textRequest(message, {
+    sessionId: senderID,
+  });
+
+  request.on('response', function(response) {
+    if (response) {
+      console.log(response);
+    }
+    else {
+      sendTypingOff(senderID);
+    }
+  });
+
+  request.on('error', function(error) {
+    console.log(error);
+  });
+
+  request.end();
 }
 
 function showMenu(senderID) {
