@@ -8,7 +8,8 @@ const
   express = require('express'),
   apiai = require('apiai'),
   request = require('request'),
-  uuid = require('uuid');
+  uuid = require('uuid'),
+  path = require("path");
 
 var app = express();
 var currentUser = null;
@@ -53,7 +54,7 @@ if (!(APP_SECRET && VALIDATION_TOKEN && PAGE_ACCESS_TOKEN && SERVER_URL)) {
   process.exit(1);
 }
 
-app.get('/',function(req,res){
+app.get('/privacy',function(req,res){
 
   res.sendFile(path.join(__dirname+'/privacy.html'));
 
