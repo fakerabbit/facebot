@@ -339,7 +339,24 @@ function sendToBot(senderID, currentUser, message) {
           sendTextMessage(senderID, fulfillment.speech);
         }
         else {
-          
+          sendTypingOff(senderID);
+          const action = result.action;
+          const parameters = result.parameters;
+          console.log('action: ', action);
+          console.log('parameters: ', parameters);
+          if (action) {
+            switch (action) {
+              case 'account.balance':
+                sendTextMessage(senderID, 'get account balance!');
+                break;
+              case 'account.movement':
+                sendTextMessage(senderID, 'get account movement!');
+                break;
+              default:
+                console.log('unknown action...');
+                break;
+            }
+          }
         }
       }
       else {
