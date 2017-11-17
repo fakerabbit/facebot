@@ -331,6 +331,20 @@ function sendToBot(senderID, currentUser, message) {
   request.on('response', function(response) {
     if (response) {
       console.log(response);
+      const result = response.result;
+      if (result) {
+        const fulfillment = result.fulfillment;
+        if (fulfillment && fulfillment.speech && fulfillment.speech.length > 0) {
+          sendTypingOff(senderID);
+          sendTextMessage(senderID, fulfillment.speech);
+        }
+        else {
+          
+        }
+      }
+      else {
+        sendTypingOff(senderID);
+      }
     }
     else {
       sendTypingOff(senderID);
